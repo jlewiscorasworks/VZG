@@ -1994,7 +1994,8 @@
 	    pickersHTML += ' <span id="projectPicker" class="cmPicker">';
 	    pickersHTML += '<!-- ko if: projects -->';
 	    pickersHTML += '<input data-bind="kendoComboBox: ';
-	    pickersHTML += '{ placeholder: \'Select a Project\', dataTextField: \'title\', dataValueField: \'id\', data: projects, value: selectedProject, }';
+		/* VZG change  */
+		pickersHTML += '{ placeholder: \'Select a Program\', dataTextField: \'title\', dataValueField: \'id\', data: projects, value: selectedProject, }';
 	    pickersHTML += '" />';
 	    pickersHTML += '<!-- /ko -->';
 	    pickersHTML += '</span>';

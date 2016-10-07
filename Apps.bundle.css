@@ -716,3 +716,11 @@ body {
 .flyout-menu {
   padding: 5px;
 }
+
+/*VZG change*/
+.app-tile .tile-name {
+  color: #4B4B4B;
+}
+.app-group-display .app-group-display-body {
+  background-color: #FFFFFF;
+}

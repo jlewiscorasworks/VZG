@@ -225,7 +225,9 @@ module.exports=function(e){return $.post("/Apps/Templatize/"+e.appId,{Name:e.tem
 var globals=require("../globals.js"),layoutOptions=require("../config/layoutOptions.js"),sortOptions=require("../config/sortOptions.js"),setBackground=require("../fn/setBackground.js");module.exports={get:function(){return $.get("/api/displaysettings")},set:function(o){$.ajax({url:"/api/displaysettings",global:!1,type:"PUT",contentType:"application/json",data:JSON.stringify({Background:globals.Background(),Layout:globals.Layout(),Sort:globals.Sort(),CustomSort:globals.CustomSort()})}),setBackground(globals.Background())}};
 
 },{"../config/layoutOptions.js":72,"../config/sortOptions.js":73,"../fn/setBackground.js":92,"../globals.js":94}],76:[function(require,module,exports){
-var groups=[],get=$.Deferred(),groups=[{Apps:["Admin Center","Onboard Center","Portfolio Center","Data Center","Project Center","Executive Dashboard"],Name:"CorasManage"}];setTimeout(function(){get.resolve(groups)},0),module.exports={get:function(){return get},groups:groups};
+    /*VZG change*/
+    var groups=[],get=$.Deferred(),groups=[{Apps:["Admin Center","Onboard Center","Portfolio Center","Data Center","Program Center","Executive Dashboard"],Name:"Grants Management"}];setTimeout(function(){get.resolve(groups)},0),module.exports={get:function(){return get},groups:groups};
+
 
 },{}],77:[function(require,module,exports){
 module.exports=function(e){var t=new kendo.data.DataSource({transport:{read:{url:encodeURI("/odata/Lists"),dataType:"json",type:"GET",data:function(){return{orderBy:"Title",AppId:e}},beforeSend:function(t){t.setRequestHeader("accept","application/json;odata=verbose"),t.setRequestHeader("AppId",e)}}},schema:{parse:function(e){return e.value}}});return t};
