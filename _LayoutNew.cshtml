@@ -1,0 +1,901 @@
+﻿@using CorasCloud.Common
+@using CorasCloud.Core.Interfaces
+@using CorasCloud.Entities.ChildEntities
+@using CorasCloud.Entities.Enums
+@using CorasWorks.Cloud.Management
+@using Ninject
+
+
+@{
+	var session = NinjectLoader.Instance.Kernel.Get<IUserSession>();
+	var currentUser = session.CurrentUser;
+
+	if (null == currentUser.DisplaySettings)
+	{
+		currentUser.DisplaySettings = new DisplaySettings();
+	}
+
+	var background = currentUser.DisplaySettings.Background ?? "assemble_sm.jpg";
+
+	var isCustom = background.Contains("http");
+
+
+	var userId = Guid.Empty.ToString();
+	var userTenantId = Guid.Empty.ToString();
+	if (null != currentUser)
+	{
+		userId = currentUser.Id;
+		if (!string.IsNullOrEmpty(currentUser.Parent))
+		{
+			userTenantId = currentUser.Parent;
+		}
+	}
+
+	var backgroundUrl = isCustom ? "url('" + background + "')" : "url('../../Content/MyAppsWallpapers/" + background + "')";
+
+	// HITACHI
+	if (userTenantId == "015c7adc-42c9-4477-9c51-28b172f39332")
+	{
+		backgroundUrl = "url('../../Content/MyAppsWallpapers/hitachi_bg.png')";
+	}
+
+	var tenant = session.CurrentTenant;
+	var userBGColor = "#ffffff";
+	var canBuildApps = false;
+	if (Request.IsAuthenticated && session.CurrentUser != null)
+	{
+		userBGColor = session.CurrentUser.BackgroundColor ?? "#ffffff";
+		canBuildApps = session.CurrentUser.Type == RegisteredUserType.TenantAdmin || session.CurrentUser.Type == RegisteredUserType.CloudAdmin || session.CurrentUser.Type == RegisteredUserType.Designer;
+	}
+
+}
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - CorasNow</title>
+
+    @Styles.Render("~/Content/css")
+    @if (session.CurrentTenant.NativeTenant && !DirectoryServices.IsOnPremise())
+    {
+        <link href="~/Content/Gentona_CSS.css" rel="stylesheet" type="text/css" />
+    }
+    <link href="~/Content/bootstrap-tagsinput.css" rel="stylesheet" />
+    <link href="~/libs/font-awesome/4.4.0/css/font-awesome.css" rel="stylesheet" />
+    <link rel="shortcut icon" type="image/x-icon" href="@Url.Content("~/favicon.ico")" />
+    <link rel="stylesheet" type="text/css" href="~/libs/kendo/2015.3.1111/styles/kendo.common-bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/libs/kendo/2015.3.1111/styles/kendo.bootstrap.min.css" />
+    <link type="text/css" href="~/libs/jquery.dataTables/jquery.dataTables.min.css" rel="stylesheet" />
+    @RenderSection("style", required: false)
+    <script>
+        var _user = {
+            Id : @Html.Raw(Json.Encode(userId)),
+            TenantId: @Html.Raw(Json.Encode(userTenantId))
+        };
+    </script>
+
+    <style type="text/css">
+        html {
+          position: relative;
+          min-height: 100%;
+        }
+
+        body {
+            background-color: @userBGColor;
+           /* margin-bottom: 60px; */
+            padding-bottom: 0px;
+            /* overflow-y: hidden; */
+	        background-image: @Html.Raw(backgroundUrl);
+
+	        background-size: cover;
+        }
+
+        .body-content {
+            position: relative;
+        }
+
+        .container {
+            width: 100%;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+       	.nav .open>a, .nav .open>a:hover, .nav .open>a:focus {background-color: transparent; border: 1px solid transparent;}
+        footer a {color: #d9dee1;}
+        footer a:hover {color: #d9dee1; text-decoration: underline}
+        footer {position:fixed;bottom:0;width:100%;}
+
+        .navbarLeft li a {
+            padding: 14px 7px 0 7px;
+            cursor: pointer;
+        }
+        .navbar .navbarLeft .SecondaryLink {
+            text-decoration: none;
+            border:none;
+            font-family: Gentona W00 Light;
+            font-size: 16px;
+            padding-top: 16px;
+            color: #ccc;
+	        cursor: pointer
+        }
+        .navbar .navbarLeft .SecondaryLink:hover {
+            padding-top: 16px;
+        }
+        .navbarLeft .PrimaryLink {
+            padding-top: 10px;
+            padding-right: 22px;
+            color:white;
+            font-size:20px;
+            float: left;
+        }
+        #InvitationPopover img:hover {
+            opacity: 0.5;
+        }
+        #NotificationPopover img:hover {
+            opacity: 0.5;
+        }
+
+
+        .dropdown-submenu {
+            position: relative;
+        }
+
+        .dropdown-submenu>.dropdown-menu {
+            top: 0;
+            right: 100%;
+            margin-top: -6px;
+            margin-left: -1px;
+            -webkit-border-radius: 0 6px 6px 6px;
+            -moz-border-radius: 0 6px 6px;
+            border-radius: 0 6px 6px 6px;
+        }
+
+        .dropdown-submenu:hover>.dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-submenu>a:after {
+            display: block;
+            content: " ";
+            float: right;
+            width: 0;
+            height: 0;
+            border-color: transparent;
+            border-style: solid;
+            border-width: 5px 0 5px 5px;
+            border-left-color: #ccc;
+            margin-top: 5px;
+            margin-right: -10px;
+        }
+
+        .dropdown-submenu:hover>a:after {
+            border-left-color: #fff;
+        }
+
+        .dropdown-submenu.pull-left {
+            float: none;
+        }
+
+        .dropdown-submenu.pull-left>.dropdown-menu {
+            left: -100%;
+            margin-left: 10px;
+            -webkit-border-radius: 6px 0 6px 6px;
+            -moz-border-radius: 6px 0 6px 6px;
+            border-radius: 6px 0 6px 6px;
+        }
+        .flyout {
+			position: fixed;
+			width: 298px;
+			height: 100%;
+			background-color: white; /*rgba(255, 255, 255, 0.75);*/
+			top: 0px;
+			display: none;
+			z-index: 1036;
+			/*color: white;*/
+			overflow-y: auto;
+			overflow-x: hidden;
+			border: 1px solid #DADADA;
+			box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.5);
+		}
+		.navbar-inverse {
+			background-color: rgba(255, 255, 255, .12);
+			box-shadow: 0 0 15px rgba(0, 0, 0, .3);
+		}
+
+		.coras-dropdown {
+			background-color: #7c868d;
+			position: absolute;
+			top: -21px;
+			right: -5px;
+			border-radius: 0;
+			padding: 7px;
+		}
+
+		.coras-dropdown li {
+			margin-left: 10px;
+		}
+
+		.coras-dropdown > :first-child > a:hover {
+			background: none;
+			color: #d1d4d6;
+		}
+
+		.coras-dropdown > li > a {
+			color: #fff;
+			margin: 0 0 20px 0;
+			padding: 7px;
+			font-size: 15px;
+		}
+
+		.coras-dropdown > li > a:hover {
+			background-color: #687178;
+			border-radius: 5px;
+		}
+
+        .PrimaryLink > a:hover {
+            text-decoration: none;
+        }
+    </style>
+    <style>
+        html *:not(.fa):not(.glyphicon) {
+            font-family: Gentona-Light !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="myModal" class="modal fade in">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div id="myModalContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="navbar navbar-fixed-top navbar-inverse myAppsNavbar" style="background-image: none; border: none">
+        <div class="container">
+            <div class="navbar-header">
+                <div class="navbarLeft">
+
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+
+                    <div class="PrimaryLink">
+                        <a href="/" style="padding: 4px 0 0 0; color: white"><span style="font-family: Gentona W00 SemiBold Italic;">My</span><span>Apps</span></a>
+                    </div>
+
+                    <div class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav">
+
+                            @{
+                                if (canBuildApps)
+                                {
+                                    <li>
+                                        @if (Request.Path != "/" && !Request.Path.ToLower().Contains("apps/home"))
+                                        {
+                                            <a class="SecondaryLink" id="NewTile" href="javascript:void(0);">
+                                                New <span style=" color #ff6d37;">+</span>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a class="SecondaryLink" id="NewTile" href="javascript:void(0);">
+                                                New <span style=" color #ff6d37;">+</span>
+                                            </a>
+                                        }
+                                    </li>
+                                    <li>
+                                        <a class="SecondaryLink" href="~/Templates/Index" title="Templates">Templates</a>
+                                    </li>
+                                }
+                            }
+
+                            <li class="user">
+                                <div class="btn-group navbar-btn" style="padding-left: 24px;margin-top: 14px;margin-bottom: 12px;padding-right: 20px;">
+
+                                    <a class="UserProfileLabel dropdown-toggle" data-toggle="dropdown" style="padding:17px 0 0 0;color: #ccc; text-decoration:none; border:none; font-family: Gentona W00 Light;font-size: 16px;" href="javascript:void(0);" title="My Profile">
+                                        View <img src="~/Content/Images/navbar/carat.png" style="padding-top: 4px;">
+                                    </a>
+
+                                    <ul class="dropdown-menu multi-level coras-dropdown" style="margin-top: 11px;" id="view-dropdown">
+                                        <li style="margin-top: 4px">
+                                           <a href="javascript:void(0);" onclick="events.trigger('set-layout', ['Tile'])">
+                                               <i class='glyphicon glyphicon-th' style="padding-right:5px"></i>Tile
+                                           </a>
+                                        </li>
+                                        <li style="margin-top: 4px">
+                                            <a href="javascript:void(0);" onclick="events.trigger('set-layout', ['Panel'])">
+                                                <i class='glyphicon glyphicon-th-large' style="padding-right:5px"></i>Panel
+                                            </a>
+                                        </li>
+                                        <li style="margin-top: 4px">
+                                            <a href="javascript:void(0);" onclick="events.trigger('set-layout', ['List'])">
+                                                <i class="glyphicon glyphicon-th-list" style="padding-right:5px"></i>List
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                                        <li>
+                                            <a class="SecondaryLink" href="/Apps/CC3D" id="OpenDiscover" title="Discover">Discover</a>
+                                        </li>
+                                        <li class="last">
+                                            <a class="SecondaryLink" id="EditTiles" href="javascript:void(0);">Edit Tiles</a>
+                                        </li>
+                                    </ul>
+
+                                    <ul class="user-menu">
+                                        @if (Request.IsAuthenticated && session.IsAuthenticated)
+                                        {
+                                            <li class="user" style="padding-top: 9px;border-left: 1px solid #424a51;">
+                                                <div class="btn-group navbar-btn" style="padding-left: 24px;margin-top: 0;margin-bottom: 12px;padding-right: 20px;">
+
+                                                    <a class="UserProfileLabel dropdown-toggle" data-toggle="dropdown" style="padding:17px 0 0 0;color: #ccc; text-decoration:none; border:none; font-family: Gentona W00 Light;font-size: 16px;" href="javascript:void(0);" title="My Profile">
+                                                        <img src="~/Content/Images/navbar/user.png" style=" padding-bottom 2px;"> @currentUser.Name <img src="~/Content/Images/navbar/carat.png" style="padding-top: 4px;">
+                                                    </a>
+
+                                                    <ul class="coras-dropdown dropdown-menu multi-level" style="margin-top: 11px;" id="user-dropdown">
+                                                        <li style="margin-top: 4px">
+                                                            <!-- 'UserProfile' css class is bound to a click event -->
+                                                            <a href="javascript:void(0);" class="UserProfile" title="User Profile">
+                                                                <img src="/Content/images/navbar/user-white.png" style="margin-right: 7px" /><span class="nav-label">Edit profile</span>
+                                                            </a>
+                                                        </li>
+                                                        @if (session.CurrentTenant.NativeTenant && !DirectoryServices.IsOnPremise())
+                                                        {
+                                                            <li>
+                                                                <!-- 'ChangePassword' css class is bound to a click event -->
+                                                                <a href="javascript:void(0);" class="ChangePassword" title="Change Password">
+                                                                    <span class="nav-label">Change Password</span>
+                                                                </a>
+                                                            </li>
+                                                        }
+                                                        @if (Request.Path == "/" || Request.Path.ToLower().Contains("apps/home"))
+                                                        {
+                                                            
+                                                            <li>
+                                                                
+                                                                <a href="javascript:void(0);" class="OpenSettings" title="Settings">
+                                                                    <span class="nav-label">Settings</span>
+                                                                </a>
+                                                            </li>
+                                                            
+                                                        }
+
+                                                        @if ((Request.IsAuthenticated && session.IsAuthenticated) && (session.CurrentUser != null && session.CurrentUser.Type == RegisteredUserType.CloudAdmin))
+                                                        {
+                                                            <li class="dropdown-submenu">
+
+                                                                <a href="javascript:void(0);" class="dropdown-toggle" style="box-shadow:none;" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-cogs"></i> Cloud Administration </a>
+                                                                <ul class="dropdown-menu">
+                                                                    <!-- 'CloudTenantAdmin' css class is bound to a click event -->
+                                                                    <li><a class="CloudTenantAdmin" href="javascript:void(0);">Tenants</a></li>
+
+                                                                    <!-- 'CloudTenantAudit' css class is bound to a click event -->
+                                                                    <li><a class="CloudTenantAudit" href="javascript:void(0);">Auditing</a></li>
+
+                                                                    <!-- 'CloudTenantExceptions' css class is bound to a click event -->
+                                                                    <li><a class="CloudTenantExceptions" href="javascript:void(0);">Exceptions</a></li>
+
+                                                                    <!-- 'CloudTenantConnectors' css class is bound to a click event -->
+                                                                    <li><a class="CloudTenantConnectors" href="javascript:void(0);">Connectors</a></li>
+                                                                </ul>
+                                                            </li>
+                                                        }
+
+                                                        @if (session.CurrentUser.Type == RegisteredUserType.TenantAdmin)
+                                                        {
+                                                            <li>
+                                                                <!-- 'OpenTenantAdmin' css class is bound to a click event -->
+                                                                <a href="javascript:void(0);" class="OpenTenantAdmin" title="TenantAdmin">
+                                                                    <span class="nav-label">Tenant Administration</span>
+                                                                </a>
+
+                                                            </li>
+                                                            <li>
+                                                                <!-- 'OpenTenantAudit' css class is bound to a click event -->
+                                                                <a href="javascript:void(0);" class="OpenTenantAudit" title="TenantAudit">
+                                                                    <span class="nav-label">Tenant Auditing</span>
+                                                                </a>
+
+                                                            </li>
+                                                        }
+                                                        @if (DirectoryServices.IsOnPremise())
+                                                        {
+                                                            <li>
+                                                                <a href="@Url.Action("SignInAsDifferentUser", "Account")" title="Login as Another User">
+                                                                    <span class="nav-label">Login as Another User</span>
+                                                                </a>
+                                                            </li>
+                                                        }
+                                                        else
+                                                        {
+                                                            <li>
+                                                                <a href="/Account/SignOut" title="Sign Out">
+                                                                    <span class="nav-label">Sign Out</span>
+                                                                </a>
+                                                            </li>
+                                                        }
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+
+</div>
+
+                <ul class="nav navbar-nav navbar-right lead">
+                    @if (Request.IsAuthenticated && session.IsAuthenticated)
+                    {
+                        <li>
+                            <a id="InvitationPopover" href="javascript:void(0);" data-container="body" data-toggle="popover" data-trigger="click" data-placement="bottom" data-content="" style="font-size: 10pt;padding-right:10px;padding-bottom:8px;padding-top: 14px;" data-original-title="" title="">
+                                <span style=" font-size 13px; padding-right 5px; vertical-align top; color white; display:none;" id="numberOfInvitationsMsg"><span id="numInvitations"></span> new invitation(s)</span>
+                                <img src="~/Content/Images/navbar/invites_icon.png">
+                            </a>
+                        </li>
+                        <li>
+                            <a id="NotificationPopover" class="notify" href="javascript:void(0);" data-container="body" data-toggle="popover" data-trigger="click" data-placement="bottom" data-content="" style="padding-left: 10px;padding-bottom: 8px;padding-right: 26px;padding-top: 14px;" data-original-title="" title="">
+                                <img src="~/Content/Images/navbar/bell_icon.png">
+                                <span id="NotificationNotify" class="badge-notify badge" style="display:none; position:absolute; top: 8px; left: 16px;font-family: Gentona W00 SemiBold Italic;">11</span>
+                            </a>
+                        </li>
+
+                        <li class="user" style="padding-top: 9px;border-left: 1px solid #424a51;">
+                            <div class="btn-group navbar-btn" style="padding-left: 24px;margin-top: 0;margin-bottom: 12px;padding-right: 20px;/* border-left:1px solid #7d868c */">
+
+                                <a class="UserProfileLabel dropdown-toggle" data-toggle="dropdown" style="padding:17px 0 0 0;color: #ccc; text-decoration:none; border:none; font-family: Gentona W00 Light;font-size: 16px;" href="javascript:void(0);" title="My Profile">
+                                    <img src="~/Content/Images/navbar/user.png" style=" padding-bottom 2px;"> @currentUser.Name <img src="~/Content/Images/navbar/carat.png" style="padding-top: 4px;">
+                                </a>
+
+                                <ul class="coras-dropdown dropdown-menu multi-level" style="margin-top: 11px;" id="user-dropdown">
+                                    <li style="margin-top: 4px">
+                                        <!-- 'UserProfile' css class is bound to a click event -->
+                                        <a href="javascript:void(0);" class="UserProfile" title="User Profile">
+                                            <img src="/Content/images/navbar/user-white.png" style="margin-right: 7px" /><span class="nav-label">@currentUser.Name</span>
+                                        </a>
+                                    </li>
+                                    @if (session.CurrentTenant.NativeTenant && !DirectoryServices.IsOnPremise())
+                                    {
+                                        <li>
+                                            <!-- 'ChangePassword' css class is bound to a click event -->
+                                            <a href="javascript:void(0);" class="ChangePassword" title="Change Password">
+                                                <span class="nav-label">Change Password</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (Request.Path == "/" || Request.Path.ToLower().Contains("apps/home"))
+                                    {
+                                        
+                                            <li>
+
+                                                 <a href="javascript:void(0);" class="OpenSettings" title="Settings">
+                                                      <span class="nav-label">Settings</span>
+                                               </a>
+                                            </li>
+                                         
+                                    }
+
+                                    @if ((Request.IsAuthenticated && session.IsAuthenticated) && (session.CurrentUser != null && session.CurrentUser.Type == RegisteredUserType.CloudAdmin))
+                                    {
+                                        <li class="dropdown-submenu">
+
+                                            <a href="javascript:void(0);" class="dropdown-toggle" style="box-shadow:none;" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-cogs"></i> Cloud Administration </a>
+                                            <ul class="dropdown-menu">
+                                                <!-- 'CloudTenantAdmin' css class is bound to a click event -->
+                                                <li><a class="CloudTenantAdmin" href="javascript:void(0);">Tenants</a></li>
+
+                                                <!-- 'CloudTenantAudit' css class is bound to a click event -->
+                                                <li><a class="CloudTenantAudit" href="javascript:void(0);">Auditing</a></li>
+
+                                                <!-- 'CloudTenantExceptions' css class is bound to a click event -->
+                                                <li><a class="CloudTenantExceptions" href="javascript:void(0);">Exceptions</a></li>
+
+                                                <!-- 'CloudTenantConnectors' css class is bound to a click event -->
+                                                <li><a class="CloudTenantConnectors" href="javascript:void(0);">Connectors</a></li>
+                                            </ul>
+                                        </li>
+                                    }
+
+                                    @if (session.CurrentUser.Type == RegisteredUserType.TenantAdmin)
+                                    {
+                                        <li>
+                                            <!-- 'OpenTenantAdmin' css class is bound to a click event -->
+                                            <a href="javascript:void(0);" class="OpenTenantAdmin" title="TenantAdmin">
+                                                <span class="nav-label">Tenant Administration</span>
+                                            </a>
+
+                                        </li>
+                                        <li>
+                                            <!-- 'OpenTenantAudit' css class is bound to a click event -->
+                                            <a href="javascript:void(0);" class="OpenTenantAudit" title="TenantAudit">
+                                                <span class="nav-label">Tenant Auditing</span>
+                                            </a>
+
+                                        </li>
+                                    }
+                                    @if (DirectoryServices.IsOnPremise())
+                                    {
+                                        <li>
+                                            <a href="@Url.Action("SignInAsDifferentUser", "Account")" title="Login as Another User">
+                                                <span class="nav-label">Login as Another User</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li>
+                                            <a href="/Account/SignOut" title="Sign Out">
+                                                <span class="nav-label">Sign Out</span>
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </li>
+
+
+                    }
+                    else
+                    {
+                        if (DirectoryServices.IsOnPremise())
+                        {
+                            <li>
+                                <a href="@Url.Action("SignInAsDifferentUser", "Account")">
+                                    <i class="glyphicon glyphicon-log-in"></i>
+                                    <span class="nav-label">Login</span>
+                                </a>
+                            </li>
+                        }
+
+                    }
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="ModalFlyout" class="flyout" style="padding:20px"></div>
+    @Html.Raw(Alerts.GetHtml())
+    @RenderBody()
+
+    <footer class="navbar-inverse" style="background-color: #1e252b; background-image: none; border: none; padding: 0 20px; height: 50px;background-image: url('/Content/Images/CN_logo.png');background-position: center;background-repeat: no-repeat;">
+        <span style="display: inline-block; padding: 15px 0 0 5px; color: #999;font-size: 13px;font-family: Gentona W00 Light;">© Copyright <span id="copyright-year"></span> CorasCloud. All Rights Reserved.</span>
+        <span class="pull-right" style="display: inline-block; padding-top: 15px;font-size: 16px;font-family: Gentona W00 Light;color: #ccc;">
+            <a href="http://coras.help/corasnow/Default.htm#cshid=1053" target="_blank">Help</a> 
+        </span>
+    </footer>
+
+
+    @Scripts.Render("~/bundles/jquery", "~/bundles/bootstrap")
+
+    <script type="text/javascript" src="~/libs/kendo/2015.3.1111/js/kendo.web.min.js" defer></script>
+    <script type="text/javascript" src="~/libs/lodash/2.4.1/lodash.min.js" defer></script>
+    <script type="text/javascript" src="~/libs/knockout/3.4.0/knockout-3.4.0.js" defer></script>
+    <script type="text/javascript" src="~/libs/jquery.dataTables/js/jquery.dataTables.min.js"></script>
+
+    
+    <!--
+    <script src="~/Scripts/CorasCloud.bundle.js"></script>
+    <script src="~/Scripts/CorasCloud.js"></script>
+    <script src="~/Scripts/CorasCloud.ModalForm.js"></script>
+    <script src="~/Scripts/CorasCloud.UserControls.js"></script>
+    <script src="~/Scripts/CorasCloud.Tenant.js"></script>
+    <script src="~/Scripts/CorasCloud.Flyout.js"></script>
+    <script src="~/Scripts/CorasCloud.Consent.js"></script>
+    <script type="text/javascript" src="https://corasworks.atlassian.net/s/ea9c306074b9644158fcafe2a9c95eed-T/en_USl6wemp-ren-on/70107/b6b48b2829824b869586ac216d119363/2.0.7/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=aa1078ca"></script>
+    <script type="text/javascript" src="https://corasworks.atlassian.net/s/ea9c306074b9644158fcafe2a9c95eed-T/en_USl6wemp-ren-on/70107/b6b48b2829824b869586ac216d119363/2.0.7/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=b0a3d4e0"></script>
+    -->
+
+    <script type="text/javascript" src="~/Scripts/bootstrap-notify.js"></script>
+    <script src="~/Scripts/typeahead.bundle.js"></script>
+    <script src="~/Scripts/bootstrap-tagsinput.js"></script>
+    
+    <script type="text/javascript" src="~/libs/pageguide/1.3.2/js/pageguide.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/tour.js"></script>
+
+    @if (session.CurrentTenant.NativeTenant && !DirectoryServices.IsOnPremise())
+    {
+        <script type="text/javascript" src="https://cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
+        <script type="text/javascript" src="https://corasworks.atlassian.net/s/ea9c306074b9644158fcafe2a9c95eed-T/en_USl6wemp-ren-on/70107/b6b48b2829824b869586ac216d119363/2.0.7/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=aa1078ca"></script>
+        <script type="text/javascript" src="https://corasworks.atlassian.net/s/ea9c306074b9644158fcafe2a9c95eed-T/en_USl6wemp-ren-on/70107/b6b48b2829824b869586ac216d119363/2.0.7/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=b0a3d4e0"></script>
+
+    }
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var fullPath = location.pathname + location.search + location.hash;
+            if(fullPath != "/"){
+                $(".myAppsNavbar").css('background-color', 'black');
+            }
+
+            $(window).scroll(function () {
+                if(fullPath == "/"){
+                    if ($(this).scrollTop() == 0)
+                        $(".myAppsNavbar").css('background-color', 'rgba(255, 255, 255, .12)');
+                    else
+                        $(".myAppsNavbar").css('background-color', 'black');
+                }
+
+            });
+
+            document.getElementById('copyright-year').innerHTML = new Date().getFullYear();
+            $(".dropdown-toggle").dropdown();
+
+
+            window.deleteApp = function(params) {
+                return $.post(
+                    '/Apps/Remove/' + params.AppId + '' +
+                    '?DeletePermanently=' + params.DeletePermanently +
+                    '&DeleteTemplates=' + params.DeleteTemplates, params
+                );
+            };
+
+        });
+
+        $(function () {
+
+            $("[data-toggle='popover']").popover({
+                html: true
+            });
+
+
+            @if(Request.IsAuthenticated && session.IsAuthenticated){
+             {
+                 <text>
+                loadAppInvites();
+                loadNotifications();
+                </text>
+             }
+         }
+
+
+
+
+
+
+            $("#AppsLayout, #AppsTileSize, #TileOrientation").on("change", function (e) {
+                if ($("#AppsLayout").val() == "custom")
+                    $("#TileSizePanel").hide();
+                else
+                    $("#TileSizePanel").show();
+
+                if ($("#AppsLayout").val() && (!$("#TileSizePanel").is(":visible") || $("#AppsTileSize").val()))
+                    $("#ChangeLayout").prop("disabled", false);
+                else
+                    $("#ChangeLayout").prop("disabled", true);
+            });
+
+            $("#ChangeLayout").on("click", function () {
+                _tileLayout = $("#AppsLayout").val();
+                _tileLayoutSize = $("#AppsTileSize").val();
+                _tileOrientation = $("#TileOrientation").val();
+
+                $.ajax({
+                    type: "GET",
+                    url: "/api/Manager/SetLayout?layout=" + _tileLayout + "&size=" + _tileLayoutSize + "&Orientation=" + _tileOrientation
+                });
+
+                CorasCloud.Flyout.Close($('#SettingsMenu'));
+                loadAppTiles();
+            });
+
+
+
+            @{ if(Request.IsAuthenticated && session.IsAuthenticated)
+            {
+                <text>
+            $(".OpenSettings").on("click", function (e) {
+                //$("#AppsLayout").val("");
+                //$("#AppsTileSize").val("");
+                //$("#ChangeLayout").prop("disabled", true);
+                //CorasCloud.Flyout.Open($('#SettingsMenu'), { position: 'right', width: 320, destroy: false });
+                events.trigger('open-settings-menu');
+                e.stopImmediatePropagation();
+            });
+
+            $(".CloudTenantAdmin").on("click", function (e) {
+                //CorasCloud.Flyout.Open($('#ModalFlyout'), { position: 'left', width: 900, load: "/Admin/Tenants?flyout=true", destroy: false });
+                // e.stopImmediatePropagation();
+                location.href = '/Admin/Tenants?flyout=false';
+                e.stopImmediatePropagation();
+            });
+
+            $(".CloudTenantAudit").on("click", function (e) {
+                CorasCloud.Flyout.Open($('#ModalFlyout'), { position: 'left', width: 900, load: "/Admin/Audit?flyout=true", destroy: false });
+                e.stopImmediatePropagation();
+            });
+
+            $(".CloudTenantExceptions").on("click", function (e) {
+                CorasCloud.Flyout.Open($('#ModalFlyout'), { position: 'left', width: 900, load: "/Admin/Exceptions?flyout=true", destroy: false });
+                e.stopImmediatePropagation();
+            });
+
+            $(".CloudTenantConnectors").on("click", function (e) {
+                CorasCloud.Flyout.Open($('#ModalFlyout'), { position: 'left', width: 900, load: "/Admin/Connectors?flyout=true", destroy: false });
+                e.stopImmediatePropagation();
+            });
+
+            $(".UserProfile").on("click", function (e) {
+                CorasCloud.Flyout.Open($('#ModalFlyout'), { position: 'right', width: 600, load: "/Home/UserProfile?flyout=true", destroy: true });
+                e.stopImmediatePropagation();
+            });
+
+            $("#NewTile").on("click", function (e) {
+                //CorasCloud.Flyout.Open($('#NewTileMenu'), { position: 'left', width: 400, destroy: false });
+                //e.stopImmediatePropagation();
+                events.trigger('create-new-app');
+            });
+
+            $('#EditTiles').on('click', function(e){
+                $('#EditTiles').parent().toggleClass('active');
+                events.trigger('toggle-mode');
+                e.stopPropagation();
+            });
+
+            $("#OpenDiscover").on("click", function (e) {
+                CorasCloud.Flyout.Open($('#ModalFlyout'), { position: 'left', width: 1000, load: "/Apps/CC3D?flyout=true", destroy: true });
+                //  e.stopImmediatePropagation();
+                // CorasCloud.Modal.ShowModal("/Apps/CC3D", "95%", null, "BuildIt");
+            });
+
+            $("#Templates").on("click", function (e) {
+                // CorasCloud.Flyout.Open($('#ModalFlyout'), { position: 'right', width: 1000, load: "/Apps/CC3D?flyout=true", destroy: true });
+                // e.stopImmediatePropagation();
+                CorasCloud.Modal.ShowModal("/Templates", "95%", null, "BuildIt");
+            });
+
+            //if (CorasWorks.Cloud.Management.Manager.IsAdmin())
+            $(".OpenTenantAdmin").on("click", function (e) {
+                //CorasCloud.Flyout.Open($('#ModalFlyout'), { position: 'right', width: 1000, load: "/Admin/Edit/@tenant.Id?flyout=true", destroy: true });
+                location.href = '/Admin/Edit/@tenant.Id?flyout=false';
+                e.stopImmediatePropagation();
+            });
+
+            $(".OpenTenantAudit").on("click", function (e) {
+                //CorasCloud.Flyout.Open($('#ModalFlyout'), { position: 'right', width: 1000, load: "/Admin/Edit/@tenant.Id?flyout=true", destroy: true });
+                location.href = '/Admin/Audit/@tenant.Id?flyout=false';
+                e.stopImmediatePropagation();
+            });
+            // }
+            //if (CorasWorks.Cloud.Management.Manager.CurrentTenant.NativeTenant && !CorasWorks.Cloud.Management.DirectoryServices.IsOnPremise())
+            //{
+            $(".ChangePassword").on("click", function (e) {
+                CorasCloud.Flyout.Open($('#ModalFlyout'), { position: 'right', width: 1000, load: "/Account/ChangePassword?flyout=true", destroy: true });
+                e.stopImmediatePropagation();
+            });
+            //}
+
+
+
+
+            </text>
+        }
+        }
+
+
+        });
+
+        function inviteProcessed() {
+            //  $('#InvitationPopover').popover('hide');
+            loadAppInvites();
+            loadNotifications();
+            location.href = '/';
+        }
+
+        function loadAppInvites() {
+            return $.getJSON("/api/Manager/GetAppInvites")
+                .done(function (data) {
+                    // CorasCloud.Utilities.HideBlockingMessage();
+                    if (data != null) {
+                        if (data.total > 0) {
+                            //$("#numberOfInvitationsMsg").html(data.total);
+                            $("#numberOfInvitationsMsg").show();
+                            $("#numInvitations").html(data.total);
+                            $("#numInvitations").show();
+                            $("#InvitationPopover").data("bs.popover").options.content = data.content;
+                            $("#InvitationPopover").show();
+                        }
+                        else {
+                            $("#numberOfInvitationsMsg").hide();
+                            $("#InvitationPopover").data("bs.popover").options.content = data.content;
+                            $("#InvitationPopover").show();
+                        }
+                    }
+                })
+                .fail(function (xhr, status, error) {
+                    //  CorasCloud.Utilities.HideBlockingMessage();
+                    // do nothing
+                });
+        }
+
+        function loadNotifications() {
+
+            // need manager api method to get unread and total inbox count plus top 3-5 items
+            // show the top 3-5 plus button to take you to full inbox
+            return $.getJSON("/api/Manager/GetInbox/?userId=@(session.CurrentUser != null ? session.CurrentUser.Id : "")")
+                 .done(function (data) {
+                     if (data != null) {
+                         if (data.total > 0) {
+                             if (data.unopened > 0) {
+                                 $("#NotificationNotify").html(data.unopened);
+                                 $("#NotificationNotify").show();
+                                 $("#NotificationPopover").show();
+                             }
+                             else {
+                                 $("#NotificationNotify").hide();
+                             }
+                             $("#NotificationPopover").data("bs.popover").options.content = data.content;
+                             $("#NotificationPopover").show();
+                         }
+                         else{
+                             $("#NotificationPopover").show();
+                             $("#NotificationNotify").hide();
+                         }
+                     }
+                 })
+            .fail(function (xhr, status, error) {
+                // do nothing
+            });
+        }
+
+        function openItem(item, opened, url) {
+            if (!opened) {
+                CorasCloud.Utilities.ShowBlockingMessage("Updating Notification Item...", false);
+                return $.getJSON("/api/Manager/SetItemOpened/?itemId=" + item)
+                .done(function (data) {
+                    CorasCloud.Utilities.HideBlockingMessage();
+                    location.href = "/Home/Inbox/?item=" + item;
+                    //location.href = url;
+                })
+                .fail(function (xhr, status, error) {
+                    CorasCloud.Utilities.HideBlockingMessage();
+                    // do nothing
+                });
+            }
+            else
+                location.href = "/Home/Inbox/?item=" + item;
+            //location.href = url;
+        }
+
+        function openMessage(item) {
+            CorasCloud.Modal.ShowModal("/Home/Message/" + item, null, null, "ShowMessage");
+        }
+
+
+
+
+
+        setTimeout(function(){
+            loadAppInvites();
+            loadNotifications();
+
+        }, 60000);
+
+        $(document).ready(function(){
+            //console.log(document.URL);
+            /*
+            var URL = document.URL;
+            var detectionString = "/Apps/Home?open=";
+            var index = document.URL.indexOf(detectionString);
+            if(index > -1){
+                var urlPage = URL.substring(index + detectionString.length, URL.lastIndexOf("/") + 1);
+                var appId = URL.substring(URL.lastIndexOf("/") + 1);
+                //console.log(appId);
+                CorasCloud.Modal.ShowModal("/Apps/invite/" + appId, "50%", "inviteProcessed()", "AcceptAppInvite");
+            }
+            */
+        });
+    </script>
+    @RenderSection("Scripts", required: false)
+
+</body>
+</html>
