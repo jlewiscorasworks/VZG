@@ -10090,3 +10090,194 @@ span.required:after {
   height: 107px;
   width: 148px;
 }
+/*VZG change*/
+.actionViewer{
+  background-color: #f6f6f6;
+}
+.twoLevelNavigation .buttonWrapper:hover {
+  color: #8f0207;
+}
+.twoLevelNavigation .k-button {
+  color: #8f0207;
+}
+.twoLevelNavigation .k-state-active > .cc-tab {
+  background-color: #8f0207;
+}
+.twoLevelNavigation .k-widget {
+  background-color: #8f0207;
+}
+.twoLevelNavigation > .k-tabstrip-items {
+  background-color: #CD040B;
+}
+#cc-app-top-nav {
+  background-color: #4B4B4B;
+
+}
+.k-spreadsheet-formula-list .k-state-focused {
+  background-color: #CD040B;
+}
+.k-spreadsheet-popup .k-state-active {
+  background-color: #CD040B;
+}
+.k-spreadsheet-filter.k-state-active {
+  background-color: #CD040B;
+}
+.k-spreadsheet .k-resize-handle,
+.k-spreadsheet .k-resize-hint-handle,
+.k-spreadsheet .k-resize-hint-marker {
+  background-color: #CD040B;
+}
+.k-spreadsheet .k-resize-hint-vertical .k-resize-hint-handle,
+.k-spreadsheet .k-resize-hint-vertical .k-resize-hint-marker {
+  background-color: #CD040B;
+}
+.k-spreadsheet .k-single-selection::after {
+  background-color: #CD040B;
+}
+.k-spreadsheet .k-auto-fill {
+  border-color: #CD040B;
+}
+.k-spreadsheet-pane .k-filter-range {
+  border-color: #CD040B;
+}
+.k-spreadsheet-pane .k-spreadsheet-column-header .k-selection-partial,
+.k-spreadsheet-pane .k-spreadsheet-column-header .k-selection-full {
+  border-bottom-color: #CD040B;
+}
+.k-spreadsheet-pane .k-spreadsheet-row-header .k-selection-partial,
+.k-spreadsheet-pane .k-spreadsheet-row-header .k-selection-full {
+  border-right-color: #CD040B;
+}
+.k-spreadsheet-selection {
+  border-color: #CD040B;
+}
+.k-spreadsheet-cell-editor {
+  box-shadow: inset 0 0 0 2px #CD040B;
+}
+.k-spreadsheet-active-cell {
+  box-shadow: inset 0 0 0 1px #CD040B;
+  border-color: #CD040B;
+}
+.k-spreadsheet-active-cell td {
+  border-color: #CD040B;
+  box-shadow: inset 1px 1px 0 1px #CD040B, inset 0 0 0 1px #CD040B;
+}
+.k-spreadsheet-active-cell.k-right td {
+  box-shadow: inset 1px 1px 0 1px #CD040B, inset -2px 0 0 1px #CD040B;
+}
+.k-spreadsheet-active-cell.k-bottom td {
+  box-shadow: inset 1px 1px 0 1px #CD040B, inset 0 -2px 0 1px #CD040B;
+}
+.k-spreadsheet-active-cell.k-right.k-bottom td {
+  box-shadow: inset 1px 1px 0 1px #CD040B, inset -2px -2px 0 1px #CD040B;
+}
+.k-ff .k-spreadsheet-active-cell td {
+  box-shadow: inset 0 0 0 1px #CD040B;
+}
+.k-primary,
+.k-overflow-container .k-primary {
+  background-color: #CD040B;
+}
+.ktb-var-selected-background {
+  color: #CD040B;
+}
+.panel-primary {
+  border-color: #CD040B;
+}
+.panel-primary > .panel-heading {
+  background-color: #CD040B;
+  border-color: #CD040B;
+}
+.panel-primary > .panel-heading + .panel-collapse > .panel-body {
+  border-top-color: #CD040B;
+}
+.panel-primary > .panel-heading .badge {
+  color: #CD040B;
+}
+.panel-primary > .panel-footer + .panel-collapse > .panel-body {
+  border-bottom-color: #CD040B;
+}
+.list-group-item.active,
+.list-group-item.active:hover,
+.list-group-item.active:focus {
+  background-color: #CD040B;
+  border-color: #CD040B;
+}
+a.thumbnail:hover,
+a.thumbnail:focus,
+a.thumbnail.active {
+  border-color: #CD040B;
+}
+.list-group-item.active > .badge,
+.nav-pills > .active > a > .badge {
+  color: #CD040B;
+}
+.label-primary {
+  background-color: #CD040B;
+}
+.pagination > .active > a,
+.pagination > .active > span,
+.pagination > .active > a:hover,
+.pagination > .active > span:hover,
+.pagination > .active > a:focus,
+.pagination > .active > span:focus {
+  background-color: #CD040B;
+  border-color: #CD040B;
+}
+.pagination > li > a,
+.pagination > li > span {
+  color: #CD040B;
+}
+.nav-pills > li.active > a,
+.nav-pills > li.active > a:hover,
+.nav-pills > li.active > a:focus {
+  background-color: #CD040B;
+}
+.nav .open > a,
+.nav .open > a:hover,
+.nav .open > a:focus {
+  border-color: #CD040B;
+}
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus {
+  background-color: #CD040B;
+}
+.btn-link {
+  color: #CD040B;
+}
+.btn-primary .badge {
+  color: #CD040B;
+}
+.btn-primary.disabled,
+.btn-primary[disabled],
+fieldset[disabled] .btn-primary,
+.btn-primary.disabled:hover,
+.btn-primary[disabled]:hover,
+fieldset[disabled] .btn-primary:hover,
+.btn-primary.disabled:focus,
+.btn-primary[disabled]:focus,
+fieldset[disabled] .btn-primary:focus,
+.btn-primary.disabled.focus,
+.btn-primary[disabled].focus,
+fieldset[disabled] .btn-primary.focus,
+.btn-primary.disabled:active,
+.btn-primary[disabled]:active,
+fieldset[disabled] .btn-primary:active,
+.btn-primary.disabled.active,
+.btn-primary[disabled].active,
+fieldset[disabled] .btn-primary.active {
+  background-color: #CD040B;
+}
+.btn-primary {
+  background-color: #CD040B !important;
+}
+.bg-primary {
+  background-color: #CD040B;
+}
+.text-primary {
+  color: #CD040B;
+}
+a {
+  color: #CD040B;
+}
