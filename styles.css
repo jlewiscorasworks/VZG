@@ -10094,6 +10094,15 @@ span.required:after {
 .actionViewer{
   background-color: #f6f6f6;
 }
+.panel-secondary > .panel-heading {
+  background-color: #dc4f54;
+}
+.panel-secondary > .panel-heading + .panel-collapse > .panel-body {
+  border-top-color: #7478b0;
+}
+.panel-secondary > .panel-heading .badge {
+  color: #dc4f54;
+}
 .twoLevelNavigation .buttonWrapper:hover {
   color: #8f0207;
 }
@@ -10280,4 +10289,14 @@ fieldset[disabled] .btn-primary.active {
 }
 a {
   color: #CD040B;
+}
+.panel-secondary > .panel-heading {
+  background-color: #dc4f54;
+}
+.twoLevelNavigation .cc-tab:hover {
+
+  background-color: #8f0207;
+}
+.twoLevelNavigation .buttonWrapper:hover {
+  color: #8f0207;
 }
