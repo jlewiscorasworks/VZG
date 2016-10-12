@@ -117,22 +117,6 @@
             });
         }
 
-        $.extend(true, RiskMatrix.prototype, {
-            dispose: function () {
-                //cc.events.off('cmAppNewProjectSelected');
-                //cc.events.off('cmAppNewPortfolioSelected');
-            },
-
-            initSubscriptions: function () {
-                var self = this;
-
-            },
-
-            initComponent: function (view) {
-
-            }
-        });
-
         function createViewModel(params, componentInfo) {
             return new TestDisplay(params);
         }
