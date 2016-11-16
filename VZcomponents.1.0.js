@@ -3018,7 +3018,10 @@
 	                                    topLevelItem.StartDate = moment(dataItem[0].B.autoStart).format('YYYY-MM-DDT08:00:00Z');
 	                                    topLevelItem.EndDate = moment(dataItem[0].B.autoEnd).format('YYYY-MM-DDT17:00:00Z');
 	                                    topLevelItem.Complete = parseFloat(dataItem[0].B.autoProgress * 100).toFixed(2);
-	                                    self.ds.sync().then(function (){
+										//VZ add
+										var updatedItem  = _.find(self.ds.data(), {Id:self.selectedItem.b.taskId}).Parent;
+										var test = ParentTaskPercentUpdate(updatedItem);
+                                        self.ds.sync().then(function (){
 	                                        self.ds.read().then(function () {
 	                                            self.loadTasks();
 	                                            self.selectedItem = null;
@@ -3039,7 +3042,22 @@
 	                    });
 	            }
 	        });
-	
+
+			//vz add
+			function ParentTaskPercentUpdate(ParentID){
+				// debugger;
+				var ItemtoUpdate  = _.find(self.ds.data(), JSON.parse('{"Id":"'+ParentID+'"}'));
+				var dataItem  = self.treeData.searchItems("taskId", ItemtoUpdate.id);
+				ItemtoUpdate.Complete = parseFloat(dataItem[0].B.autoProgress * 100).toFixed(2);
+                ItemtoUpdate.dirty = true;
+				if(ItemtoUpdate.Parent != ''){
+						return ParentTaskPercentUpdate(ItemtoUpdate.Parent);
+				}else{
+					return true;
+				}
+
+			}
+
 	        $('#setMilestoneButton').on('click', function (e) {
 	            if (self.selectedItem) {
 	                var formOptions = new cnc.ui.form.options();

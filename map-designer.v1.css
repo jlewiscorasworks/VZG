@@ -108,6 +108,18 @@ div.cw-sra-tool-table {
     background-color: cornflowerblue;
     background-color: cadetblue;
 }
+.excluded{
+    color: #488486;
+    /* background-color: #D3676D; */
+    /* background-color: #AAC5F5; */
+    background-color: #9FC5C6;
+}
+.Stage-included {
+}
+.Stage-excluded{
+    color: #488486;
+    background-color: #f36978 !important;
+}
 .phase-item {
     margin-left: 10px;
     margin-bottom: 7px;
@@ -143,6 +155,52 @@ div.cw-sra-tool-table {
     position: absolute;
     background-size: 18px 18px;
     background-image: url(Images/enabled.png);
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+ .Stage-status-img-enabled {
+     position: absolute;
+     left: 3px;
+     top: 3px;
+     width: 18px;
+     height: 18px;
+     z-index: 100;
+     cursor: pointer;
+     background-image: url(Images/enabled.png);
+     background-repeat: no-repeat;
+     background-size: 18px 18px;
+ }
+.Stage-status-img-disabled {
+    position: absolute;
+    left: 3px;
+    top: 3px;
+    width: 18px;
+    height: 18px;
+    z-index: 100;
+    cursor: pointer;
+    background-image: url(Images/disabled.png);
+    background-repeat: no-repeat;
+    background-size: 18px 18px;
+}
+.status-img-enabled {
+    margin-left: 3px;
+    margin-top: 3px;
+    height: 18px;
+    width: 18px;
+    position: absolute;
+    background-size: 18px 18px;
+    background-image: url(Images/enabled.png);
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+.status-img-disabled {
+    margin-left: 3px;
+    margin-top: 3px;
+    height: 18px;
+    width: 18px;
+    position: absolute;
+    background-size: 18px 18px;
+    background-image: url('Images/disabled.png');
     background-repeat: no-repeat;
     cursor: pointer;
 }
@@ -582,7 +640,7 @@ div.cw-stage-btn:hover {
     float: left;
 }
 .save-btn {
-    margin-left: 5px;
+    margin-left: 25px;
     margin-bottom: 5px;
     margin-top: 5px;
     margin-right: 15px;
@@ -593,6 +651,7 @@ div.cw-stage-btn:hover {
     border-radius: 5px;
     font-size: 15px;
     background-color: #F04457;
+
     color: white;
     display: inline-block;
     cursor: pointer;
@@ -619,27 +678,28 @@ div.cw-stage-btn:hover {
     height: 45px;
     float: left;
 }
-.submit-btn {
+.submit-btn, .approve-btn, .build-btn {
     margin-left: 5px;
     margin-bottom: 5px;
     margin-top: 5px;
-    margin-right: 100px;
+    /*margin-right: 100px;*/
     padding: 8px 15px;
     height: 42px;
-    width: 114px;
+    /*width: 114px;*/
     border: 1px solid silver;
     border-radius: 5px;
     font-size: 15px;
-    background-color: #F04457;
+    /*background-color: #F04457;*/
+    background-color: #51AC4D;
     color: white;
     display: inline-block;
     cursor: pointer;
     font-family: 'Segoe UI Light';
 }
-.submit-btn:hover {
+.submit-btn:hover, .approve-btn:hover, .build-btn:hover {
     opacity: 0.65;
 }
-.submit-btn .submit-logo {
+.submit-btn .submit-logo, .approve-btn .submit-logo, .build-btn .submit-logo {
     margin: 0px;
     margin-left: -3px;
     margin-right: 14px;
@@ -653,7 +713,7 @@ div.cw-stage-btn:hover {
     float: left;
     background-image: url(images/submit.png);
 }
-.submit-btn span {
+.submit-btn span, .approve-btn span, .build-btn span{
     margin-top: 3px;
     height: 45px;
     float: left;
@@ -1062,7 +1122,7 @@ div[role='dialog'] {
 .ui-dialog .ui-dialog-buttonpane {
     border: none;
 }
-#button-save-map, #button-save-stage, #button-save-tool, #button-save-file, #button-ok-file, #button-ok-map, #button-yes-map-delete, #button-save-stage, #button-ok-stage {
+#button-save-map, #button-save-stage, #button-save-tool, #button-save-file, #button-ok-file, #button-ok-map, #button-yes-map-delete, #button-save-stage, #button-ok-stage, #button-yes-map-save, #button-ok-map-save, #button-yes-tool-delete, #button-yes-tool-delete, #button-ok-map-delete, #button-ok-tool-delete, #button-ok-stage-delete, #button-ok-tool, #button-yes-stage-delete, #button-yes-map-change, #button-yes-map-submit, #button-ok-map-submit, #button-yes-map-approve, #button-ok-map-approve, #button-yes-map-build, #button-ok-map-build {
     padding: 4px 10px;
     border: 1px solid silver;
     border-radius: 5px;
@@ -1074,10 +1134,10 @@ div[role='dialog'] {
     font-family: Segoe UI Light;
     outline: none !important;
 }
-#button-save-map:hover, #button-save-stage:hover, #button-save-tool:hover, #button-save-file:hover, #button-ok-file:hover, #button-ok-map:hover, #button-yes-map-delete:hover, #button-save-stage:hover, #button-ok-stage:hover {
+#button-save-map:hover, #button-save-stage:hover, #button-save-tool:hover, #button-save-file:hover, #button-ok-file:hover, #button-ok-map:hover, #button-yes-map-delete:hover, #button-save-stage:hover, #button-ok-stage:hover, #button-yes-map-save:hover, #button-ok-map-save:hover, #button-yes-tool-delete:hover, #button-yes-tool-delete:hover, #button-ok-map-delete:hover, #button-ok-tool-delete:hover, #button-ok-stage-delete:hover, #button-ok-tool:hover, #button-yes-stage-delete:hover, #button-yes-map-change:hover, #button-yes-map-submit:hover, #button-ok-map-submit:hover, #button-yes-map-approve:hover, #button-ok-map-approve:hover, #button-yes-map-build, #button-ok-map-build:hover {
     opacity: 0.75;
 }
-#button-cancel-map, #button-cancel-stage, #button-cancel-tool, #button-cancel-file, #button-delete-map, #button-addSub-tool, #button-no-map-delete, #button-cancel-stage {
+#button-cancel-map, #button-cancel-stage, #button-cancel-tool, #button-cancel-file, #button-delete-map, #button-addSub-tool, #button-no-map-delete, #button-cancel-stage, #button-no-map-save, #button-no-tool-delete, #button-no-stage-delete, #button-no-map-change, #button-no-map-submit, #button-no-map-approve, #button-no-map-build {
     padding: 4px 10px;
     border: 1px solid silver;
     border-radius: 5px;
@@ -1089,7 +1149,7 @@ div[role='dialog'] {
     font-family: Segoe UI Light;
     outline: none !important;
 }
-#button-cancel-map:hover, #button-cancel-stage:hover, #button-cancel-tool:hover, #button-cancel-file:hover , #button-delete-map:hover, #button-addSub-tool:hover, #button-no-map-delete:hover, #button-cancel-stage:hover{
+#button-cancel-map:hover, #button-cancel-stage:hover, #button-cancel-tool:hover, #button-cancel-file:hover , #button-delete-map:hover, #button-addSub-tool:hover, #button-no-map-delete:hover, #button-cancel-stage:hover,#button-no-map-save:hover, #button-no-tool-delete:hover, #button-no-stage-delete:hover, #button-no-map-change:hover, #button-no-map-submit:hover, #button-no-map-approve:hover, #button-no-map-build:hover{
     opacity: 0.75;
 }
 #button-delete-file {

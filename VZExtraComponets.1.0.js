@@ -113,7 +113,7 @@
                 self.ready = ko.observable(false);
                 self.riskStatus = null;
                 self.risksList = '';
-                self.ds = []
+                self.ds = [];
             });
         }
 
@@ -133,7 +133,7 @@
     /* 3 */
     /***/ function(module, exports) {
 
-        module.exports = "<div id=\"toolValidationOkDialog\" class=\"cw-dialog hide\" title=\"\"> <div id=\"toolValidationMsg\" class=\"validationOK\">No tool validation errors were found</div> </div>";
+        module.exports = "<div id=\"toolValidationMsg\" class=\"validationOK\">No tool validation errors were found</div>";
 
         /***/ }
 
